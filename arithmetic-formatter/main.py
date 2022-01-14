@@ -1,6 +1,3 @@
-import re
-
-
 def errorHandler(problems):
     if len(problems) > 5:
         return "Error: Too many problems."
@@ -10,7 +7,7 @@ def errorHandler(problems):
             return "Error: Numbers cannot be more than four digits."
         if equation[1] != "+" and equation[1] != "-":
             return "Error: Operator must be '+' or '-'."
-        if not (re.search('^\d+$', equation[0]) and re.search('^\d+$', equation[2])):
+        if not (equation[0].isdecimal() and equation[2].isdecimal()):
             return "Error: Numbers must only contain digits."
     return ""
 
