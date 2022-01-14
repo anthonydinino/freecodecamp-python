@@ -4,7 +4,7 @@ daysOfTheWeek = ("Monday", "Tuesday", "Wednesday",
                  "Thursday", "Friday", "Saturday", "Sunday")
 
 
-class fixedDate:
+class calculatedDate:
     def __init__(self, hours, minutes, daysPassed):
         self.hours = hours
         self.minutes = minutes
@@ -37,17 +37,17 @@ def convertTo24h(time):
     return newTime
 
 
-def fixDate(hours, minutes):
+def calculateDate(hours, minutes):
     """
     receives added hours and minutes from duration and
-    returns a fixedDate object
+    returns a calculatedDate object
     """
     newMinutes = minutes % 60
     remainderHours = math.floor(minutes/60)
     addedHours = hours + remainderHours
     daysPassed = math.floor(addedHours / 24)
     newHours = addedHours % 24
-    return fixedDate(newHours, newMinutes, daysPassed)
+    return calculatedDate(newHours, newMinutes, daysPassed)
 
 
 def add_time(start, duration, day=None):
@@ -55,11 +55,15 @@ def add_time(start, duration, day=None):
     temp = convertTo24h(start)
     timeArr = temp.split(":")
     durationArr = duration.split(":")
+
+    #adds the duration to the start hours and minutes
     hoursAdded = int(timeArr[0]) + int(durationArr[0])
     minutesAdded = int(timeArr[1]) + int(durationArr[1])
-    fixeddate = fixDate(hoursAdded, minutesAdded)
-    daysPassed = fixeddate.daysPassed
-    newTime = "{}:{:0>2}".format(fixeddate.hours, fixeddate.minutes)
+
+    #calculates the 
+    calculatedDate = calculateDate(hoursAdded, minutesAdded)
+    daysPassed = calculatedDate.daysPassed
+    newTime = "{}:{:0>2}".format(calculatedDate.hours, calculatedDate.minutes)
 
     # create days passed string
     daysLater = ""
@@ -69,14 +73,14 @@ def add_time(start, duration, day=None):
         daysLater = " (next day)"
 
     # if day parameter exists
+    endDay = ""
     if day:
-        newDay = ""
-        try:
-            print(daysOfTheWeek.index(day))
-        except:
-            return "Please enter a valid day of the week"
+        startDayIndex = daysOfTheWeek.index(day.title())
+        endDayIndex = (startDayIndex + daysPassed) % 7
+        endDay = ", {}".format(daysOfTheWeek[endDayIndex])
 
-    return convertToAmPm(newTime) + daysLater
+    return convertToAmPm(newTime) + endDay + daysLater
 
 
-print(add_time("11:40 AM", "0:25"))  # expected = "12:05 PM"
+# "6:18 AM, Monday (20 days later)"
+print(add_time("8:16 PM", "466:02", "tuesday"))
