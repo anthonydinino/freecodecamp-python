@@ -5,10 +5,12 @@ daysOfTheWeek = ("Monday", "Tuesday", "Wednesday",
 
 
 class calculatedDate:
-    def __init__(self, hours, minutes, daysPassed):
-        self.hours = hours
-        self.minutes = minutes
-        self.daysPassed = daysPassed
+    def __init__(self, hours, minutes):
+        remainderHours = math.floor(minutes/60)
+        addedHours = hours + remainderHours
+        self.minutes = minutes % 60
+        self.daysPassed = math.floor(addedHours / 24)
+        self.hours = addedHours % 24
 
     def __str__(self) -> str:
         return "{{{}, {}, {}}}".format(self.hours, self.minutes, self.daysPassed)
@@ -37,33 +39,20 @@ def convertTo24h(time):
     return newTime
 
 
-def calculateDate(hours, minutes):
-    """
-    receives added hours and minutes from duration and
-    returns a calculatedDate object
-    """
-    newMinutes = minutes % 60
-    remainderHours = math.floor(minutes/60)
-    addedHours = hours + remainderHours
-    daysPassed = math.floor(addedHours / 24)
-    newHours = addedHours % 24
-    return calculatedDate(newHours, newMinutes, daysPassed)
-
-
 def add_time(start, duration, day=None):
     # add duration to date, fix date and receive days passed
     temp = convertTo24h(start)
     timeArr = temp.split(":")
     durationArr = duration.split(":")
 
-    #adds the duration to the start hours and minutes
+    # adds the duration to the start hours and minutes
     hoursAdded = int(timeArr[0]) + int(durationArr[0])
     minutesAdded = int(timeArr[1]) + int(durationArr[1])
 
-    #calculates the 
-    calculatedDate = calculateDate(hoursAdded, minutesAdded)
-    daysPassed = calculatedDate.daysPassed
-    newTime = "{}:{:0>2}".format(calculatedDate.hours, calculatedDate.minutes)
+    # calculates the time and days passed
+    d = calculatedDate(hoursAdded, minutesAdded)
+    daysPassed = d.daysPassed
+    newTime = "{}:{:0>2}".format(d.hours, d.minutes)
 
     # create days passed string
     daysLater = ""
